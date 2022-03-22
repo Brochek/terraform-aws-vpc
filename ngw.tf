@@ -1,0 +1,1 @@
+enable_nat_gateway = true 
