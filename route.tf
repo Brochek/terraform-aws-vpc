@@ -1,7 +1,17 @@
-resource "aws_route" "private_nat_gateway" {
-  count = local.create_vpc && var.enable_nat_gateway ? local.nat_gateway_count : 0
+resource "aws_route_table" "nat-route" {
+    subnet_id = var.aws_subnet.private[*].id
+}
+resource "aws_route" "nat-route" {
+  route_table_id         = aws_route_table.nat-route.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.main.id
+}
 
-  route_table_id         = element(aws_route_table.private[*].id, count.index)
-  destination_cidr_block = var.nat_gateway_destination_cidr_block
-  nat_gateway_id         = element(aws_nat_gateway.main[*].id, count.index)
+
+data "aws_route_table" "main" {
+  subnet_id = var.aws_subnet.public[*].id
+}
+resource "aws_route" "route" {
+  route_table_id            = data.aws_route_table.main.id
+  destination_cidr_block    = "0.0.0.0/0"
 }

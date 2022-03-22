@@ -4,10 +4,12 @@ variable "tags" {
 }
 
 variable "private_subnets_cidr" {
+    description = "A list of private subnets inside the VPC"
     type = list
 }
 
 variable "public_subnets_cidr" {
+    description = "A list of public subnets inside the VPC"
     type = list
 }
 variable "create_internet_gateway_route" {
